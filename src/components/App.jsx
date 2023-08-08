@@ -17,13 +17,15 @@ export class App extends Component {
   };
 
   componentDidMount() {
-    if (localStorage.getItem('contact-item'))
+    const getContact = localStorage.getItem('contact-item');
+
+    if (getContact)
       this.setState({
-        contacts: JSON.parse(localStorage.getItem('contact-item')),
+        contacts: JSON.parse(getContact),
       });
   }
 
-  componentDidUpdate(_, prevState) {
+  componentDidUpdate() {
     localStorage.setItem('contact-item', JSON.stringify(this.state.contacts));
   }
 
@@ -33,12 +35,13 @@ export class App extends Component {
       id: nanoid(),
       ...data,
     };
-
-    contacts.some(({ name }) => name === data.name)
-      ? alert(`${data.name} is already in contacts`)
-      : this.setState(prevState => ({
-          contacts: [...prevState.contacts, newContact],
-        }));
+    const isExistsName = contacts.some(({ name }) => name === data.name);
+    if (isExistsName) {
+      return alert(`${data.name} is already in contacts`);
+    }
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, newContact],
+    }));
   };
 
   handleChangeFilter = ({ currentTarget: { value } }) => {
