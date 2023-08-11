@@ -25,8 +25,13 @@ export class App extends Component {
       });
   }
 
-  componentDidUpdate() {
-    localStorage.setItem('contact-item', JSON.stringify(this.state.contacts));
+  componentDidUpdate(_, prevState) {
+    const {contacts} = this.state;
+    if (prevState.contacts !== contacts)
+      return localStorage.setItem(
+        'contact-item',
+        JSON.stringify(this.state.contacts)
+      );
   }
 
   addContact = data => {
